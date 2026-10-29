@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>정과정 복습 문제 풀이</title>
+<style>
+/* 폰트: index.html 옆 fonts 폴더에 woff 파일 3개를 두세요. 없으면 시스템 명조체로 보입니다. */
+@font-face{font-family:'SillaB';font-weight:700;src:url(fonts/shilla-b.woff) format('woff');font-display:swap}
+@font-face{font-family:'SillaM';font-weight:500;src:url(fonts/shilla-m.woff) format('woff');font-display:swap}
+@font-face{font-family:'Chosun';font-weight:400;src:url(fonts/chosun.woff) format('woff');font-display:swap}
+:root{--paper:#F3EAD7;--card:#FCF7EC;--ink:#2B2420;--sub:#6A5848;--line:#8A7360;--dot:#B9A58D;--red:#A8323F;--redt:#8C2A36;--ok:#2F5B52;--okbg:#E3EBDD;--badbg:#F6DEDC;--track:#E2D4B8;
+--ft:'SillaB','Noto Serif KR','Nanum Myeongjo','Apple SD Gothic Neo',serif;--fm:'SillaM','Noto Serif KR','Nanum Myeongjo',serif;--fb:'Chosun','Noto Serif KR','Nanum Myeongjo','Apple SD Gothic Neo',serif}
+*{box-sizing:border-box}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--fb);line-height:1.6;background:radial-gradient(ellipse at 30% 10%,#F7EFDD 0%,#F3EAD7 55%,#E8DBBF 100%) fixed}
+.noise{position:fixed;inset:0;width:100%;height:100%;opacity:.26;mix-blend-mode:multiply;pointer-events:none;z-index:0}
+.frame{position:fixed;inset:10px;border:1px solid rgba(90,70,54,.5);pointer-events:none;z-index:1}
+.frame::after{content:"";position:absolute;inset:6px;border:1px solid rgba(90,70,54,.22)}
+#app{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:26px 28px 40px}
+h1,h2,h3{font-family:var(--ft);font-weight:700;margin:0}
+button,input,select,textarea{font-family:inherit;font-size:1rem;color:inherit}
+a{color:var(--redt)}
+:focus-visible{outline:3px solid #C98A93;outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* 헤더 */
+.hd{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid rgba(90,70,54,.45);margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:12px;background:none;border:0;padding:0;cursor:pointer;font-family:var(--ft);font-weight:700;font-size:1.6rem}
+.seal{width:36px;height:36px;display:grid;place-items:center;background:var(--red);color:#F7EBDD;font-family:var(--ft);font-weight:700;font-size:1.25rem;border-radius:3px;transform:rotate(-4deg)}
+.steps{display:flex;align-items:center;gap:8px;list-style:none;margin:0;padding:0;color:var(--sub);font-size:.95rem}
+.steps li{display:flex;align-items:center;gap:7px}
+.steps .n{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:.85rem}
+.steps .done .n{background:var(--ink);color:#F7EFDD;border-color:var(--ink)}
+.steps .cur{color:var(--ink)}.steps .cur .n{background:var(--red);color:#FBF3E4;border-color:var(--red)}
+.steps .sep{width:22px;height:1px;background:var(--line)}
+.tools{display:flex;align-items:center;gap:8px}
+.chip{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:1px solid var(--ink);background:rgba(252,247,236,.8);font-family:var(--ft);font-weight:700;font-size:1.2rem;letter-spacing:.05em;gap:8px}
+.who{font-size:.95rem;color:#4A3C31}
+/* 공통 */
+.btn{min-height:46px;padding:0 22px;border:1px solid var(--line);background:transparent;border-radius:2px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:var(--ink);font-size:1rem}
+.btn:hover{background:rgba(138,115,96,.12)}
+.btn.sm{min-height:44px;padding:0 14px;font-size:.95rem}
+.btn.pri{background:var(--red);border-color:var(--red);color:#FBF3E4;font-family:var(--fm);font-weight:500;letter-spacing:.08em;font-size:1.1rem;box-shadow:inset 0 0 0 3px var(--red),inset 0 0 0 4px rgba(251,243,228,.7)}
+.btn.pri:hover{background:#912B37}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.card{background:rgba(252,247,236,.92);border:1px solid var(--line);box-shadow:0 0 0 5px rgba(252,247,236,.55),0 0 0 6px rgba(138,115,96,.45),0 14px 34px rgba(90,70,54,.14);padding:1.6rem 2rem;margin:7px}
+.card.flat{box-shadow:none;margin:0;background:rgba(252,247,236,.85);border-color:#A8937D;padding:1rem 1.2rem}
+.lab{font-size:.85rem;letter-spacing:.16em;color:var(--sub)}
+.pill{display:inline-block;padding:2px 12px;border:1px solid var(--line);border-radius:999px;font-size:.85rem;color:#4A3C31}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.sp{justify-content:space-between}
+.mt{margin-top:1.2rem}
+.err{color:var(--redt);min-height:1.5em;font-size:.95rem;margin:.4rem 0 0}
+label{display:block;font-size:.95rem;color:#3E332B;margin:1rem 0 .3rem}
+input[type=text],input[type=password],select,textarea{width:100%;min-height:46px;padding:.5rem .8rem;background:#FFFCF4;border:1px solid var(--line);border-radius:2px}
+textarea{resize:vertical;line-height:1.5}
+input::placeholder{color:#7A6858}
+/* 홈 */
+.home{display:grid;grid-template-columns:1.15fr .85fr;gap:2.5rem;align-items:center;position:relative;min-height:560px}
+.home h1{font-size:clamp(4.5rem,13vw,9.5rem);line-height:1;letter-spacing:.04em;margin:.6rem 0 0}
+.home .sub{display:flex;align-items:center;gap:16px;margin-top:1rem;font-family:var(--fm);font-weight:500;font-size:1.6rem;letter-spacing:.05em}
+.home .sub .seal{width:58px;height:58px;font-size:1.9rem;flex:none}
+.home p.lead{font-size:1.2rem;line-height:1.9;color:#3E332B;max-width:30em;margin:1.6rem 0 0}
+.branch{position:absolute;right:-10px;top:-30px;width:min(520px,58%);pointer-events:none;opacity:.95}
+.rec{list-style:none;margin:.6rem 0 0;padding:0;font-size:.95rem}
+.rec li{display:flex;justify-content:space-between;gap:10px;padding:.35rem 0;border-top:1px dotted var(--dot)}
+/* 개념 정리 */
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:16px;padding:2px 0 6px}
+.tab{flex:none;min-height:46px;padding:0 18px;background:transparent;border:1px solid var(--line);border-radius:2px;cursor:pointer;font-size:1rem}
+.tab[aria-selected=true]{background:var(--ink);color:#F7EFDD;border-color:var(--ink);font-family:var(--fm);font-weight:500}
+.read{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr);gap:18px;align-items:start}
+.lines{padding:1.2rem 1.4rem}
+.ln{display:grid;grid-template-columns:3.2rem minmax(0,1.15fr) minmax(0,1fr);gap:.4rem 1rem;align-items:center;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px dotted var(--dot);padding:.7rem .4rem;cursor:pointer;min-height:64px}
+.ln:hover{background:rgba(231,163,174,.12)}
+.ln[aria-pressed=true]{background:rgba(231,163,174,.22);box-shadow:inset 4px 0 0 var(--red)}
+.ln .lb{font-family:var(--fm);font-weight:500;color:var(--redt);font-size:.95rem}
+.ln .og{font-size:1.3rem;line-height:1.45}
+.ln .md{font-size:1rem;line-height:1.55;color:#3E332B}
+.head{display:grid;grid-template-columns:3.2rem minmax(0,1.15fr) minmax(0,1fr);gap:1rem;font-size:.85rem;color:var(--sub);padding:0 .4rem .4rem;border-bottom:1px solid #A8937D}
+.note{background:var(--ink);color:#F7EFDD;padding:1.4rem 1.4rem;position:sticky;top:12px}
+.note .lab{color:#E7A3AE}.note h3{font-size:1.9rem;line-height:1.25;margin:.4rem 0 .2rem}
+.note p{margin:.6rem 0 0;font-size:1.02rem;line-height:1.75;color:#F1E8D6}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.cards .card.flat h3{font-size:1.2rem;color:var(--redt);margin-bottom:.3rem}
+.cards .card.flat p{margin:0;font-size:1.05rem;line-height:1.75}
+/* 퀴즈 */
+.quiz{display:grid;grid-template-columns:190px minmax(0,1fr);gap:20px;align-items:start}
+.prog{padding:1rem .9rem}
+.prog .big{font-family:var(--ft);font-weight:700;font-size:2.2rem;line-height:1.1}
+.dots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:.8rem}
+.dot{position:relative;height:44px;display:grid;place-items:center;border:1px solid var(--line);border-radius:2px;font-size:.95rem;color:#4A3C31;background:transparent}
+.dot.ok{background:var(--ink);color:#F7EFDD;border-color:var(--ink)}
+.dot.no{background:var(--badbg);border-color:var(--red);color:var(--redt)}
+.dot.cur{background:var(--red);color:#FBF3E4;border-color:var(--red);box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--red)}
+.qh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.qh h2{font-size:1.9rem}
+.qt{font-size:1.5rem;line-height:1.55;margin:1rem 0 1rem}
+.qt u{text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:5px}
+.opts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.op{display:flex;align-items:center;gap:14px;width:100%;min-height:54px;padding:.55rem 1rem;text-align:left;background:rgba(255,252,244,.75);border:1px solid var(--dot);border-radius:0;cursor:pointer;font-size:1.2rem;line-height:1.5}
+.op:hover:not([disabled]){border-color:var(--ink);background:#FFFCF4}
+.op[disabled]{cursor:default}
+.op .no{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:.95rem}
+.op .tx{flex:1}.op .tg{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-weight:500;font-size:1rem;white-space:nowrap}
+.op.right{border:2px solid var(--ok);background:var(--okbg)}.op.right .no{background:var(--ok);color:#F7F4E8;border-color:var(--ok)}.op.right .tg{color:var(--ok)}
+.op.wrong{border:2px solid var(--red);background:var(--badbg)}.op.wrong .no{background:var(--red);color:#FBF3E4;border-color:var(--red)}.op.wrong .tg{color:var(--redt)}
+.fb{position:relative;margin-top:1rem;padding:.9rem 1.2rem .9rem 1.5rem;background:#F0E4CC;border:1px solid #A8937D}
+.fb::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--red)}
+.fb.good::before{background:var(--ok)}
+.fb h3{font-size:1.2rem;color:var(--redt)}.fb.good h3{color:var(--ok)}
+.fb p{margin:.3rem 0 0;font-size:1.05rem;line-height:1.7}
+.hintbox{margin-top:.9rem;padding:.7rem 1rem;border:1px dashed var(--line);background:rgba(255,252,244,.7);font-size:1.02rem}
+/* 결과 */
+.res{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:20px;align-items:start}
+.score{position:relative;overflow:hidden;padding-bottom:9.5rem}
+.score .num{font-family:var(--ft);font-weight:700;font-size:clamp(5rem,12vw,8.5rem);line-height:1}
+.score .of{font-family:var(--fm);font-weight:500;font-size:2rem;color:var(--sub)}
+.stamp{position:absolute;right:1.6rem;top:3.4rem;width:88px;height:88px;border:3px solid var(--red);border-radius:50%;color:var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-12deg);font-family:var(--ft);font-weight:700;line-height:1.1}
+.stamp b{font-size:1.7rem}.stamp span{font-size:.9rem}
+dl.kv{display:grid;grid-template-columns:auto 1fr;margin:1.2rem 0 0;font-size:1.1rem}
+dl.kv dt,dl.kv dd{margin:0;padding:.65rem 0;border-top:1px dotted #A8937D}dl.kv dd{text-align:right}
+.bar{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 3rem;gap:12px;align-items:center;margin:.6rem 0;font-size:1.02rem}
+.bar .tr{height:14px;background:var(--track)}.bar .fl{display:block;height:14px;background:var(--ink)}.bar.low .fl{background:var(--red)}.bar span:last-child{text-align:right}
+details.wq{border-top:1px dotted #A8937D;padding:.5rem 0}
+details.wq summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:14px;list-style:none}
+details.wq summary::-webkit-details-marker{display:none}
+details.wq .qn{font-family:var(--ft);font-weight:700;font-size:1.5rem;color:var(--redt);min-width:2.2rem}
+details.wq .bd{padding:.4rem 0 .6rem 3.2rem;font-size:1.02rem;line-height:1.7}
+/* 교사용 */
+.tgrid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:18px;align-items:start}
+.qlist{list-style:none;margin:0;padding:0;max-height:560px;overflow:auto}
+.qlist button{width:100%;text-align:left;min-height:48px;padding:.4rem .6rem;background:transparent;border:0;border-bottom:1px dotted var(--dot);cursor:pointer;display:flex;gap:8px;align-items:baseline}
+.qlist button[aria-current=true]{background:var(--ink);color:#F7EFDD}
+.qlist .t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.95rem}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{padding:.55rem .6rem;border-bottom:1px dotted var(--dot);text-align:left;white-space:nowrap}
+th{font-family:var(--fm);font-weight:500;color:var(--sub);border-bottom:1px solid #A8937D}
+.ans{display:flex;gap:8px;align-items:center}.ans input{width:20px;height:20px;accent-color:var(--red)}
+.ans input[type=text]{width:100%;height:auto}
+footer{margin-top:28px;text-align:center;font-size:.85rem;color:var(--sub);letter-spacing:.05em}
+footer a{color:var(--redt)}
+@media (max-width:860px){
+ #app{padding:16px 14px 32px}.frame{inset:5px}.frame::after{inset:4px}
+ .card{padding:1.1rem 1rem;margin:5px}
+ .steps .lb,.steps .sep{display:none}.steps .cur .lb{display:inline}
+ .home{grid-template-columns:1fr;gap:1.6rem;min-height:0}.branch{width:70%;top:-18px;right:-14px;opacity:.55}
+ .read,.quiz,.res,.tgrid{grid-template-columns:minmax(0,1fr)}.home>*{min-width:0}
+ .note{position:static}.cards{grid-template-columns:1fr}
+ .ln{grid-template-columns:2.6rem 1fr;}.ln .md{grid-column:2}.head{display:none}.ln .og{font-size:1.2rem}
+ .dots{display:flex;overflow-x:auto;padding-bottom:4px}.dot{flex:none;width:44px}.prog .big{font-size:1.7rem}.prog p{display:none}.prog p#hc{display:block;margin:.4rem 0 0}
+ .qt{font-size:1.25rem}.op{font-size:1.05rem}.qh h2{font-size:1.5rem}
+ .bar{grid-template-columns:7rem minmax(0,1fr) 2.6rem;gap:8px}
+ .stamp{width:72px;height:72px;top:3rem;right:1rem}.stamp b{font-size:1.4rem}
+ .hd{gap:10px}.who{display:none}
+}
+@media (prefers-reduced-motion:no-preference){.enter .card{animation:rise .35s ease-out}@keyframes rise{from{opacity:0;transform:translateY(6px)}}}
+</style>
+</head>
+<body>
+<svg class="noise" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><filter id="hanji"><feTurbulence type="fractalNoise" baseFrequency=".9 .12" numOctaves="3" seed="7"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .36  0 0 0 0 .22  0 0 0 .9 -.25"/></filter><rect width="100%" height="100%" filter="url(#hanji)"/></svg>
+<div class="frame" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<g id="bl"><g fill="#F6CDD3" stroke="#C26A79" stroke-width="1"><circle cx="0" cy="-11" r="10"/><circle cx="10.5" cy="-3.4" r="10"/><circle cx="6.5" cy="8.9" r="10"/><circle cx="-6.5" cy="8.9" r="10"/><circle cx="-10.5" cy="-3.4" r="10"/></g><circle r="4.5" fill="#A8323F"/><g stroke="#A8323F" stroke-width="1" stroke-linecap="round"><path d="M0 0L0 -9M0 0L8.5 -3M0 0L5 7.5M0 0L-5 7.5M0 0L-8.5 -3"/></g></g>
+</defs></svg>
+<div id="app">
+<header class="hd" id="hd"></header>
+<main id="screen" tabindex="-1"></main>
+<footer>참고 · 한국민족문화대백과사전 「정과정곡」(원문·현대어 풀이: 박병채 역) · 이 기록은 이 기기의 브라우저에만 저장됩니다 · <a href="#" data-a="teacher">교사용</a></footer>
+</div>
+<noscript><p style="position:relative;z-index:3;padding:1rem">이 페이지는 자바스크립트가 켜져 있어야 작동합니다.</p></noscript>
+
+<script>
+(()=>{'use strict';
+/* ===== 유틸 ===== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mem={};
+const store={
+  get(k,d){try{const v=localStorage.getItem('jgj_'+k);return v==null?(k in mem?mem[k]:d):JSON.parse(v)}catch(e){return k in mem?mem[k]:d}},
+  set(k,v){mem[k]=v;try{localStorage.setItem('jgj_'+k,JSON.stringify(v));return true}catch(e){return false}},
+  del(k){delete mem[k];try{localStorage.removeItem('jgj_'+k)}catch(e){}}
+};
+const pad=n=>String(n).padStart(2,'0');
+const clock=s=>pad(Math.floor(s/60))+':'+pad(s%60);
+const minsec=s=>Math.floor(s/60)+'분 '+pad(s%60)+'초';
+const stamp=t=>{const d=new Date(t);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())};
+const branch=(c)=>`<svg class="${c}" viewBox="0 0 560 420" aria-hidden="true"><g fill="none" stroke="#5A4636" stroke-linecap="round"><path d="M568 36C480 62 430 118 356 150S226 246 118 306" stroke-width="11"/><path d="M424 106C408 156 386 186 346 226" stroke-width="6"/><path d="M338 158C306 140 276 140 244 118" stroke-width="5"/><path d="M258 232C236 276 204 300 172 330" stroke-width="4"/><path d="M500 64C520 100 516 130 498 160" stroke-width="4"/></g><use href="#bl" x="244" y="116"/><use href="#bl" x="346" y="228"/><use href="#bl" x="498" y="164" transform="rotate(20 498 164)"/><use href="#bl" x="396" y="136" transform="rotate(-14 396 136)"/><use href="#bl" x="172" y="332" transform="rotate(30 172 332)"/><use href="#bl" x="296" y="170" transform="rotate(8 296 170)"/><use href="#bl" x="450" y="82" transform="rotate(-30 450 82)"/></svg>`;
+
+/* ===== 내용: 본문 (원문은 읽기 편하게 현대 글자로 옮김. 교과서 표기와 다를 수 있음) ===== */
+const LINES=[
+['전강','내 님믈 그리와 우니다니','내 임을 그리워하여 울고 있더니','임(임금)을 그리워하며 울던 화자의 모습으로 시작한다. 작품 전체의 정서가 그리움에서 출발함을 보여 준다.'],
+['중강','山 졉동새 난 이슷하요이다','접동새와 나와는 (우는 모양이) 비슷합니다그려','접동새는 임을 그리며 우는 화자의 처지를 빗댄 자연물이다. 자연물에 의탁해 정서를 드러내는 표현(감정이입)이다.'],
+['후강','아니시며 거츠르신들 아으','(그 누가 옳고 그른 것이) 아니며 (모든 것이) 거짓인 줄을, 아!','자신에 대한 참소가 사실이 아니라는 주장이 시작되는 부분이다.'],
+['부엽','殘月曉星이 아시리이다','지새는 새벽달과 새벽별만이 (저의 충정을) 아실 것입니다','사람들은 알아주지 않아도 새벽달과 별만은 결백을 알아줄 것이라고 호소한다. 잔월효성은 결백을 알아줄 존재이다.'],
+['대엽','넉시라도 님은 한디 녀져라 아으','(살아서 임과 함께 지내지 못한다면) 죽은 혼이라도 임과 한자리에 가고 싶습니다, 아!','죽어서 넋이 되어서라도 임과 함께하고 싶다는 간절함이다. 5·6행 사설은 〈만전춘별사〉 제3연과 의미상 통한다고 본다.'],
+['부엽','벼기더시니 뉘러시니잇가','(임의 뜻을) 어기던 사람이 누구였습니까','의문형 표현으로 자신의 억울함과 결백을 강조한다. (‘벼기더시니’는 해석에 이설이 있는 구절이다.)'],
+['이엽','過도 허믈도 千萬 업소이다','(참으로) 과실도 허물도 전혀 없습니다','잘못이 전혀 없다는 단정적 진술로 결백을 직접 주장한다.'],
+['삼엽','말힛 마러신뎌','(임께서 죄 없는 몸이라고 용서하시고 부르실 줄 알았더니) 말짱한 말씀이었구나','소환하겠다던 임금의 약속이 지켜지지 않은 데 대한 서운함이 드러난다. 「원가」의 모티프와 연결된다.'],
+['사엽','살읏브뎌 아으','(정말) 죽고만 싶은 것이여, 아!','절망이 극에 달한 정서를 감탄사로 드러낸다.'],
+['부엽','니미 나를 하마 니자시니잇가','임께서 벌써 저를 잊으셨습니까','임이 자신을 잊었는가를 묻는 의문형으로 서운함과 호소를 담는다.'],
+['오엽','아소 님하 도람 드르샤 괴오쇼셔','맙소서 임이시여, 돌려 들으시어 사랑하소서','낙구에 해당한다. ‘아소 님하’의 위치가 정통 사뇌가와 달라 사뇌가가 해체되는 모습으로 본다. 마음을 돌려 사랑해 달라는 간청으로 끝맺는다.']
+];
+const CONCEPT=[
+[['작가','정서(호 과정). 우리말로 전하는 고려가요 가운데 작자가 확실한 유일한 노래이다.'],
+ ['창작 배경','인종과 동서 간으로 오래 총애를 받았으나, 의종 즉위 뒤 참소를 받아 고향 동래로 유배되었다. 의종이 곧 다시 부르겠다고 약속했지만 소식이 없자 거문고를 잡고 이 노래를 불렀다고 전한다.'],
+ ['제목','작가의 호 ‘과정(瓜亭)’을 따서 ‘정과정’이라 하며, 곡조 이름을 따 ‘삼진작’이라고도 한다.'],
+ ['기록','『고려사』 악지에 제작 동기와 이제현의 해시(소악부)가 실려 있고, 우리말 노래는 『악학궤범』에 전한다. 『대악후보』에는 악보도 함께 있다.'],
+ ['제작 시기','의종 5년(1151)~의종 24년(1170) 등 여러 견해가 있다. 노래 내용과 『고려사』의 해설이 일치하는, 유배 후 상당 기간이 지난 시기로 보는 견해가 타당하다고 본다.']],
+[['갈래','향가계 고려가요. 10구체 사뇌격 향가를 계승한 형식으로, 향가의 잔존 형태 또는 쇠퇴기의 향가로 보기도 한다.'],
+ ['분장','악곡상 11악절(11행)이지만 삼엽·사엽을 합쳐 10행으로 보아 10구체 향가의 계승으로 간주한다. 연 구분이 없는 단련체이다.'],
+ ['낙구','낙구 ‘아소 님하’의 위치가 정통 사뇌가와 달라, 사뇌가가 해체되는 모습으로 해석한다. 향가에서 고려가요로 넘어가는 과도기적 작품이다.'],
+ ['악곡','삼진작: 속악에서 가장 빠른 템포의 곡조이다.'],
+ ['표기','향찰이 아니라 훈민정음으로 『악학궤범』에 기록되어 전한다.']],
+[['주제','유배지에서 임금을 그리워하며 결백을 호소하고, 다시 사랑해 주기를 간청한다.'],
+ ['정서와 태도','원망보다 하소연의 농도가 짙다. 자신을 낮추고, 버림받았더라도 임을 그리는 마음이 변함없음을 강조한다.'],
+ ['자연물에 의탁','접동새는 화자의 처지를, 잔월효성은 화자의 결백을 알아줄 존재를 나타낸다.'],
+ ['호소와 반문','‘뉘러시니잇가’, ‘니미 나를 하마 니자시니잇가’ 같은 의문형으로 억울함과 서운함을 강조하고, 낙구의 감탄사와 호격(‘아소 님하’)으로 간청을 집약한다.'],
+ ['충신연주지사','신하가 임금을 그리워하는 정을 노래한 작품으로 널리 알려졌고, 후대 〈사미인곡〉·〈속미인곡〉 같은 연주지사의 원류로 평가한다.']],
+[['「원가」 (신충, 향가)','자신을 돌보아 주겠다던 임금의 약속이 지켜지지 않음을 모티프로 한다는 점에서 연결된다. 다만 〈정과정〉은 원망보다 하소연의 농도가 짙다. 「원가」는 향찰로 기록되었다.'],
+ ['〈만전춘별사〉 (고려속요)','〈정과정〉 5·6행의 사설이 〈만전춘별사〉 제3연과 의미상 통해, 당대에 유행하던 민요 사설을 받아들인 것으로 보기도 한다.'],
+ ['〈사미인곡〉·〈속미인곡〉 (정철, 충신연주지사)','임금을 임에 빗대어 그리움과 충정을 노래하는 충신연주지사의 맥락에서, 〈정과정〉을 그 원류로 평가한다.'],
+ ['한눈에 비교','향가(원가): 향찰 표기, 10구체 등 · 고려가요(정과정): 한글 표기, 향가 형식 계승 + 해체 · 가사(사미인곡): 후대의 충신연주지사 작품']]
+];
+const TABS=['본문 읽기','작가·창작 배경','형식·갈래','표현법·주제','비교 작품'];
+const AREAS=['작가·창작 배경','형식·갈래','시어·구절 해석','표현법','주제·정서','비교 작품'];
+
+/* ===== 문제 (기본 15문항) a:영역 lv:난이도 q:발문 o:선택지 ans:정답(0~4) h:힌트 e:해설 ===== */
+const DQ=[
+{a:'작가·창작 배경',lv:'하',q:'〈정과정〉의 작가에 대한 설명으로 가장 적절한 것은?',o:['작자를 알 수 없는 민요로, 궁중에서만 불렸다.','정철이 유배지에서 지은 가사 작품이다.','정서가 지었으며, 작자가 분명히 알려진 고려가요이다.','이제현이 한시를 우리말로 옮겨 처음 지은 노래이다.','의종이 신하를 위로하려고 직접 지어 내려 준 노래이다.'],ans:2,h:'작가의 호를 따서 노래 이름이 붙었어요.',e:'〈정과정〉은 정서가 지은 노래로, 우리말로 전하는 고려가요 가운데 작자가 확실한 유일한 작품이다. 작가의 호 과정(瓜亭)에서 이름이 붙었다.'},
+{a:'작가·창작 배경',lv:'하',q:'〈정과정〉의 창작 배경으로 알맞은 것은?',o:['전쟁에서 이긴 뒤 승전을 기념하며 지었다.','참소를 받아 동래로 유배된 뒤, 임금의 소환을 기다리며 지었다고 전한다.','외국 사신으로 떠나 고향을 그리워하며 지었다.','벼슬에서 물러나 자연 속에서 한가롭게 지내며 지었다.','궁중 연회에서 부르기 위해 임금의 명을 받아 지었다.'],ans:1,h:'작가는 고향 동래로 쫓겨났어요.',e:'정서는 의종 즉위 뒤 참소를 받아 고향 동래로 유배되었고, 임금이 곧 부르겠다고 한 약속이 지켜지지 않자 거문고를 잡고 이 노래를 불렀다고 전한다.'},
+{a:'형식·갈래',lv:'중',q:'〈정과정〉에 대한 설명으로 적절하지 않은 것은?',o:['작자를 알 수 있는 고려가요이다.','10구체 향가의 형식을 계승한 면이 있다.','낙구 ‘아소 님하’가 향가의 낙구와 같은 위치에 놓여 있다.','접동새에 빗대어 임을 그리워하는 처지를 드러낸다.','후대 충신연주지사 계열 작품의 원류로 평가된다.'],ans:2,h:'‘아소 님하’가 놓인 위치를 떠올려 보세요.',e:'10구체 향가의 틀을 이어받았지만, 낙구 ‘아소 님하’가 정통 사뇌가와 다른 위치에 놓여 사뇌가가 해체되는 모습으로 본다. 그러므로 ③이 적절하지 않다.'},
+{a:'형식·갈래',lv:'상',q:'〈정과정〉의 악곡·형식에 대한 설명으로 적절한 것은?',o:['악곡상 4악절로 나뉘며 후렴구가 반복되는 연장체이다.','속악 가운데 가장 느린 일진작 곡조로 불렸다.','향찰로 표기되어 『고려사』 악지에 우리말 가사 전체가 전한다.','악곡상 11악절이지만 삼엽·사엽을 합쳐 10행으로 보아 10구체 향가의 계승으로 간주한다.','연 구분이 뚜렷한 분연체로, 후대에 시조로 이어졌다.'],ans:3,h:'곡조 이름 삼진작은 속악 중 매우 빠른 편이에요.',e:'문학상 10구체 단련(연 구분 없음)이고, 악곡상 11악절이나 삼엽·사엽을 합쳐 10행으로 보아 10구체 사뇌격 향가의 계승으로 본다. 삼진작은 속악에서 가장 빠른 템포이며, 우리말 노래는 『악학궤범』에 전한다.'},
+{a:'형식·갈래',lv:'하',q:'〈정과정〉을 향가와 고려속요를 잇는 과도기적 작품으로 보는 근거로 알맞은 것은?',o:['4구체 형식에 후렴구가 붙어 있다.','향찰 표기와 한자어로만 이루어져 있다.','불교 의식에서 승려가 부르던 노래이다.','여러 연으로 나뉘어 각 연마다 후렴구가 반복된다.','10구체 향가의 형식을 이으면서도 낙구의 위치가 달라지는 변화가 나타난다.'],ans:4,h:'낙구 ‘아소 님하’의 위치를 생각해 보세요.',e:'10구체 사뇌격 향가의 형식을 계승하면서도 낙구 위치가 달라져 향가가 해체되는 모습을 보이므로, 향가에서 고려가요로 넘어가는 과도기적 작품으로 평가한다.'},
+{a:'시어·구절 해석',lv:'중',q:'“山 졉동새 난 이슷하요이다”에서 접동새의 역할로 가장 적절한 것은?',o:['임을 그리며 우는 화자의 처지를 빗대는 자연물이다.','화자를 모함한 간신을 상징한다.','임금이 보낸 소환 소식을 전하는 전령이다.','계절의 변화를 알려 주는 배경 소재이다.','화자가 유배지에서 벗어나 누리는 자유를 상징한다.'],ans:0,h:'앞 구절 “내 님믈 그리와 우니다니”와 이어서 읽어 보세요.',e:'임을 그리워하며 우는 화자의 모습이 접동새와 닮았다고 하여, 자신의 처지와 정서를 자연물에 의탁해 드러낸다.'},
+{a:'시어·구절 해석',lv:'중',q:'“殘月曉星이 아시리이다”에 담긴 의미로 적절한 것은?',o:['새벽까지 잠들지 못하는 괴로움을 하소연한다.','밤이 지나 곧 임이 올 것이라는 기대를 드러낸다.','시간이 흐르면 모든 것이 잊힌다는 허무를 말한다.','사람들은 몰라도 새벽달과 별만은 화자의 결백을 알아줄 것이라는 뜻이다.','임금의 권위가 하늘의 달과 별처럼 높음을 찬양한다.'],ans:3,h:'아무도 알아주지 않을 때 화자가 증인으로 삼는 존재가 무엇일까요?',e:'사람들이 자신의 결백을 믿어 주지 않는 상황에서, 지는 달과 새벽별만은 자신의 마음을 알 것이라며 억울함과 결백을 호소한다.'},
+{a:'시어·구절 해석',lv:'하',q:'“넉시라도 님은 한디 녀져라 아으”에 드러난 화자의 마음은?',o:['임에 대한 원망을 풀고 복수하려는 마음','죽어서 넋이 되어서라도 임과 함께하고 싶은 간절한 마음','유배지를 벗어나 자연 속에서 살고 싶은 소망','억울함을 포기하고 모든 것을 체념하는 마음','임을 떠나 새로운 삶을 시작하려는 결심'],ans:1,h:'‘넋’은 죽은 뒤에도 남는 영혼을 뜻해요.',e:'넋이라도 임과 한자리에 가고 싶다는 표현으로, 임을 향한 변함없고 간절한 마음을 강조한다. 이 부분은 〈만전춘별사〉 제3연과 의미상 통한다고 본다.'},
+{a:'표현법',lv:'중',q:'접동새와 잔월효성에서 공통으로 확인할 수 있는 표현상 특징은?',o:['자연물에 기대어 화자의 처지와 정서를 드러낸다.','의성어를 활용하여 현장감을 높인다.','대화 형식으로 갈등을 극적으로 보여 준다.','색채 대비를 통해 계절감을 부각한다.','반복되는 후렴구로 운율을 형성한다.'],ans:0,h:'접동새는 화자의 처지를, 잔월효성은 결백을 알아줄 존재를 나타내요.',e:'접동새는 화자의 처지를 비유하고, 잔월효성은 결백을 알아줄 존재로 설정되어, 모두 자연물에 의탁해 정서를 드러낸다.'},
+{a:'표현법',lv:'중',q:'“아소 님하 도람 드르샤 괴오쇼셔”의 표현 효과로 적절한 것은?',o:['임에 대한 분노를 직설적으로 쏟아내 갈등을 고조시킨다.','청자를 친구로 바꾸어 위로를 구하는 분위기를 만든다.','감탄사와 호격을 통해 마음을 돌려 사랑해 달라는 간청을 집약한다.','객관적 서술로 지금까지의 사건을 요약한다.','앞의 내용을 부정하며 주제를 반전시킨다.'],ans:2,h:'‘님하’는 임을 부르는 말이고, ‘아소’는 감탄·만류의 말이에요.',e:'낙구의 ‘아소 님하’는 감탄사와 호격으로, 임에게 마음을 돌려 사랑해 달라고 간절히 호소하는 정서를 집약한다.'},
+{a:'주제·정서',lv:'중',q:'〈정과정〉의 주제로 가장 적절한 것은?',o:['자연 속에 은거하는 삶의 즐거움','남편을 기다리는 아내의 정절','전쟁이 남긴 상처와 비애','임에 대한 원망과 저주','유배지에서 임금을 그리워하며 결백을 호소하고 다시 사랑해 주기를 간청함'],ans:4,h:'‘충신연주지사’라는 말을 떠올려 보세요.',e:'신하가 임금을 그리워하는 정을 노래한 충신연주지사로, 결백을 호소하며 임의 사랑을 되찾고자 하는 간절함이 주제이다.'},
+{a:'주제·정서',lv:'상',q:'〈정과정〉에 나타난 화자의 태도로 적절한 것은?',o:['억울함을 참소한 무리에 대한 보복 의지로 풀어낸다.','자신을 낮추고 버림받았더라도 임을 그리는 마음이 변함없음을 강조한다.','임의 소환을 포기하고 유배지 생활에 만족한다.','임이 약속을 지킬 것을 확신하며 기쁨을 드러낸다.','세속의 일을 초월하여 무심한 태도를 보인다.'],ans:1,h:'원망보다 하소연의 농도가 짙다는 점을 떠올려 보세요.',e:'화자는 소환 약속이 지켜지지 않았음에도 원망보다는 하소연으로 일관하며, 변함없는 충정을 강조한다.'},
+{a:'비교 작품',lv:'상',q:'〈정과정〉과 신충의 「원가」를 비교한 설명으로 적절한 것은?',o:['두 작품 모두 향찰로 기록되어 전한다.','두 작품 모두 작가를 알 수 없는 민요이다.','〈원가〉는 〈정과정〉처럼 유배지에서 거문고를 타며 불렀다고 전한다.','두 작품 모두 임금의 약속이 지켜지지 않은 상황이 바탕이 되나, 〈정과정〉은 원망보다 하소연이 짙다.','〈정과정〉은 〈원가〉보다 먼저 지어져 향가의 형식을 만들었다.'],ans:3,h:'두 작품 모두 임금이 한 약속과 관련이 있어요.',e:'신충의 「원가」와 〈정과정〉은 자신을 돌보아 주겠다던 임금의 약속이 지켜지지 않은 데서 비롯된 노래이다. 다만 〈정과정〉은 원망보다 하소연의 농도가 짙다. 〈정과정〉은 향찰이 아닌 훈민정음으로 전한다.'},
+{a:'비교 작품',lv:'중',q:'〈정과정〉과 정철의 〈사미인곡〉의 공통점으로 알맞은 것은?',o:['임금을 향한 그리움과 충정을 노래한 충신연주지사의 맥락에 속한다.','두 작품 모두 향찰로 기록되어 전한다.','두 작품 모두 작가를 알 수 없다.','〈사미인곡〉이 먼저 지어져 〈정과정〉의 원류가 되었다.','두 작품 모두 4음보 연속체 가사 형식이다.'],ans:0,h:'신하가 임금을 그리워하는 노래를 일컫는 말이 있어요.',e:'〈정과정〉은 신하가 임금을 그리워하는 정을 노래한 충신연주지사로 알려져 있고, 후대 〈사미인곡〉·〈속미인곡〉 같은 연주지사의 원류로 평가된다.'},
+{a:'비교 작품',lv:'상',q:'〈정과정〉 5~6행(“넉시라도 님은 한디 녀져라 아으 / 벼기더시니 뉘러시니잇가”)이 〈만전춘별사〉 제3연과 의미상 통한다는 점에서 추론할 수 있는 것은?',o:['〈만전춘별사〉의 작자가 정서임을 입증한다.','〈정과정〉이 당대에 유행하던 민요 사설을 수용했을 가능성이 있다.','두 작품이 모두 향찰로 기록되었음을 보여 준다.','〈정과정〉이 궁중 음악에서 배제되었음을 보여 준다.','〈정과정〉이 순수한 개인 창작이 아님이 확정되었음을 뜻한다.'],ans:1,h:'고려속요는 민간의 노래와 관련이 깊다는 점을 떠올려 보세요.',e:'5·6행의 사설이 〈만전춘별사〉 제3연과 의미상 통해, 당대 유행하던 민요 사설을 받아들여 사뇌격 향가 양식과 복합한 독특한 형태로 이해하기도 한다. 다만 ‘가능성’이지 확정은 아니다.'}
+];
+
+/* ===== 상태 ===== */
+const S={view:'home',student:store.get('student',null),tab:0,line:1,quiz:null,last:null,fs:store.get('fs',16),tOK:false,tTab:'rec',filter:'',edit:null,tmsg:'',tid:null};
+const getQs=()=>{const q=store.get('questions',null);return Array.isArray(q)&&q.length?q:DQ};
+const records=()=>store.get('records',[]);
+const circ=n=>'①②③④⑤'[n];
+
+/* ===== 렌더 ===== */
+function header(){
+  const v=S.view,q=S.quiz;
+  const step=v==='concept'?1:v==='quiz'?(q&&q.mode==='retry'?4:2):v==='result'?(S.last&&S.last.mode==='retry'?4:3):0;
+  const names=['개념 정리','문제 풀이','결과','오답 다시 풀기'];
+  const st=v==='home'||v.startsWith('t')?'':`<ol class="steps" aria-label="진행 단계">${names.map((n,i)=>`${i?'<li class="sep" aria-hidden="true"></li>':''}<li class="${i+1<step?'done':i+1===step?'cur':''}"${i+1===step?' aria-current="step"':''}><span class="n">${i+1}</span><span class="lb">${n}</span></li>`).join('')}</ol>`;
+  const tm=v==='quiz'?`<div class="chip" aria-label="소요 시간"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2B2420" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="11" r="7"/><path d="M10 7v4l2.5 1.5M7.5 2h5"/></svg><span id="tm">${clock(elapsed())}</span></div>`:'';
+  $('#hd').innerHTML=`<button class="brand" data-a="home" aria-label="처음 화면으로"><span class="seal" aria-hidden="true">정</span>정과정</button>${st}<div class="tools">${tm}<button class="btn sm" data-a="fs-" aria-label="글자 작게">가-</button><button class="btn sm" data-a="fs+" aria-label="글자 크게">가+</button>${S.student&&!v.startsWith('t')?`<span class="who">${esc(S.student.sid)} ${esc(S.student.name)}</span>`:''}</div>`;
+}
+function vHome(){
+  const s=S.student;
+  const mine=s?records().filter(r=>r.sid===s.sid).slice(-5).reverse():[];
+  const card=s?`<section class="card" aria-label="입장"><h2 style="font-size:1.9rem">${esc(s.name)} 학생, 반가워요</h2><p class="lab" style="margin:.4rem 0 0">${esc(s.sid)}</p>
+   <div class="row mt"><button class="btn pri" data-a="concept">개념 정리부터</button><button class="btn" data-a="start">바로 문제 풀기</button></div>
+   <h3 style="font-size:1.2rem;margin-top:1.4rem">내 최근 기록</h3>${mine.length?`<ul class="rec">${mine.map(r=>`<li><span>${stamp(r.t)}</span><span>${r.score}/${r.total}점 · ${minsec(r.sec)}</span></li>`).join('')}</ul>`:'<p style="margin:.4rem 0 0;font-size:.95rem;color:var(--sub)">아직 기록이 없어요.</p>'}
+   <p style="margin:1.2rem 0 0"><button class="btn sm" data-a="logout">다른 학생으로 입장</button></p></section>`
+  :`<form class="card" id="loginF" aria-label="입장하기" novalidate><h2 style="font-size:1.9rem">입장하기</h2><p style="margin:.3rem 0 0;font-size:.95rem;color:var(--sub)">학번과 이름으로 내 기록이 저장됩니다.</p>
+   <label for="sid">학번</label><input id="sid" type="text" inputmode="numeric" autocomplete="off" placeholder="예) 20312" maxlength="8">
+   <label for="nm">이름</label><input id="nm" type="text" autocomplete="off" placeholder="이름을 입력하세요" maxlength="20">
+   <p class="err" id="err" role="alert"></p>
+   <button class="btn pri" style="width:100%;margin-top:.4rem" type="submit">복습 시작</button>
+   <p style="margin:1rem 0 0;font-size:.9rem;color:var(--sub)">처음이라면 입장 후 ‘개념 정리’부터 보세요.</p></form>`;
+  return `<div class="home">${branch('branch')}<div style="position:relative"><div class="lab" style="font-size:1rem">고려가요 · 고등학교 2학년 국어 복습</div><h1>정과정</h1>
+  <div class="sub"><span class="seal" aria-hidden="true">정</span><span>鄭瓜亭曲 문제 풀이</span></div>
+  <p class="lead">임을 그리워하며 우는 접동새처럼,<br>작품의 내용과 특징을 문제로 다시 짚어 봅니다.</p>
+  <div class="row" style="margin-top:1.4rem;gap:8px"><span class="pill">개념 정리</span><span class="pill">객관식 ${getQs().length}문항</span><span class="pill">해설 · 힌트</span><span class="pill">오답 다시 풀기</span></div></div>
+  <div style="position:relative">${card}</div></div>`;
+}
+function vConcept(){
+  const t=S.tab,tabs=`<div class="tabs" role="tablist" aria-label="개념 정리 단원">${TABS.map((n,i)=>`<button class="tab" role="tab" aria-selected="${i===t}" data-a="tab" data-n="${i}">${n}</button>`).join('')}</div>`;
+  let body='';
+  if(t===0){const L=LINES[S.line];
+    body=`<div class="read"><section class="card lines" aria-label="본문과 현대어 풀이"><div class="head"><span>악절</span><span>원문</span><span>현대어 풀이</span></div>${LINES.map((l,i)=>`<button class="ln" data-a="line" data-n="${i}" aria-pressed="${i===S.line}"><span class="lb">${l[0]}</span><span class="og">${esc(l[1])}</span><span class="md">${esc(l[2])}</span></button>`).join('')}
+    <p style="margin:.8rem .4rem 0;font-size:.85rem;color:var(--sub)">행을 누르면 풀이가 열려요. 표기는 읽기 편하게 옮긴 것이라 교과서와 다를 수 있어요.</p></section>
+    <aside class="note card" style="margin:7px" aria-live="polite"><div class="lab">구절 풀이 · ${S.line+1}행 (${L[0]})</div><h3>${esc(L[1])}</h3><p>${esc(L[3])}</p></aside></div>`;
+  }else body=`<div class="cards">${CONCEPT[t-1].map(c=>`<div class="card flat"><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p></div>`).join('')}</div>`;
+  const last=t===TABS.length-1;
+  return `<h2 style="font-size:2rem;margin-bottom:.8rem">개념 정리</h2>${tabs}${body}
+  <div class="row sp mt"><button class="btn" data-a="tabgo" data-n="${t-1}" ${t===0?'disabled':''}>이전</button><div class="row">${last?'<button class="btn pri" data-a="start">문제 풀러 가기</button>':`<button class="btn" data-a="start">건너뛰고 문제 풀기</button><button class="btn pri" data-a="tabgo" data-n="${t+1}">다음 · ${TABS[t+1]}</button>`}</div></div>`;
+}
+function vQuiz(){
+  const Q=S.quiz,q=Q.list[Q.i],done=Q.picked!==null,ok=done&&Q.picked===q.ans;
+  const dots=Q.list.map((_,i)=>{const r=Q.res[i];return `<span class="dot ${i===Q.i?'cur':r?(r.ok?'ok':'no'):''}">${i+1}${r&&i!==Q.i?`<span class="sr">${r.ok?' 정답':' 오답'}</span>`:''}</span>`}).join('');
+  const opts=q.o.map((t,i)=>{let c='',tg='';
+    if(done){if(i===q.ans){c='right';tg='<span class="tg"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>정답</span>'}
+      else if(i===Q.picked){c='wrong';tg='<span class="tg"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg>내 답</span>'}}
+    return `<li><button class="op ${c}" data-a="pick" data-n="${i}" ${done?'disabled':''}><span class="no">${i+1}</span><span class="tx">${esc(t)}</span>${tg}</button></li>`}).join('');
+  const qtxt=esc(q.q).replace(/(적절하지 않은|옳지 않은|알맞지 않은)/,'<u>$1</u>');
+  return `<div class="quiz"><aside class="card flat prog" aria-label="진행 현황" style="margin:0"><div class="lab">${Q.mode==='retry'?'오답 다시 풀기':'진행'}</div><div class="big">${Q.i+1} <span style="font-family:var(--fb);font-weight:400;font-size:1rem;color:var(--sub)">/ ${Q.list.length}</span></div><div class="dots">${dots}</div><p style="margin:.9rem 0 0;font-size:.85rem;color:var(--sub);line-height:1.7">먹색 = 맞힘<br>붉은 칸 = 지금·오답</p><p style="margin:.6rem 0 0;padding-top:.6rem;border-top:1px dotted var(--dot);font-size:.9rem" id="hc">힌트 사용 ${Q.hints}회</p></aside>
+  <section class="card" style="margin:0" aria-label="문제 ${Q.i+1}"><div class="qh"><h2>문제 ${Q.i+1}</h2><span class="pill">난이도 ${esc(q.lv)}</span><span class="pill">${esc(q.a)}</span></div>
+  <p class="qt">${qtxt}</p><ul class="opts">${opts}</ul>
+  ${Q.hint&&!done?`<div class="hintbox" role="status"><b>힌트</b> · ${esc(q.h)}</div>`:''}
+  ${done?`<div class="fb ${ok?'good':''}" role="status"><h3>${ok?'정답입니다':'오답입니다 — 정답은 '+(q.ans+1)+'번'}</h3><p>${esc(q.e)}</p></div>`:''}
+  <div class="row sp mt"><button class="btn" data-a="hint" ${done||Q.hint?'disabled':''}>힌트 보기 <small style="color:var(--sub)">(점수 영향 없음)</small></button>
+  <button class="btn pri" data-a="next" ${done?'':'disabled'} id="nx">${Q.i===Q.list.length-1?'결과 보기':'다음 문제'}</button></div>
+  <p style="margin:.8rem 0 0;font-size:.8rem;color:var(--sub)">키보드: 숫자 1~5로 선택할 수 있어요.</p></section></div>`;
+}
+function vResult(){
+  const R=S.last,pct=Math.round(R.score/R.total*100),qs=R.list;
+  const ar=AREAS.concat([...new Set(qs.map(q=>q.a))].filter(a=>!AREAS.includes(a))).map(a=>{const idx=qs.map((q,i)=>q.a===a?i:-1).filter(i=>i>=0);return idx.length?[a,idx.filter(i=>R.res[i].ok).length,idx.length]:null}).filter(Boolean);
+  const wrong=qs.map((q,i)=>R.res[i].ok?null:i).filter(i=>i!==null);
+  return `<div class="res"><section class="card score" aria-label="나의 결과"><div class="lab">${R.mode==='retry'?'오답 다시 풀기 결과':'나의 결과'}</div>
+  <div style="margin-top:.6rem"><span class="num">${R.score}</span> <span class="of">/ ${R.total}</span></div><div class="stamp" aria-label="${pct}점"><b>${pct}</b><span>점</span></div>
+  <dl class="kv"><dt>정답률</dt><dd>${pct}%</dd><dt>소요 시간</dt><dd>${minsec(R.sec)}</dd><dt>힌트 사용</dt><dd>${R.hints}회</dd><dt>틀린 문제</dt><dd>${wrong.length}문항</dd></dl>
+  ${R.mode==='retry'?'':`<p style="margin:.8rem 0 0;font-size:.85rem;color:var(--sub)">이 기록은 이 기기에 저장되었어요.</p>`}${branch('').replace('<svg class=""','<svg style="position:absolute;right:-30px;bottom:-110px;width:300px;opacity:.55;pointer-events:none"')}</section>
+  <div style="display:grid;gap:18px"><section class="card flat" aria-label="영역별 결과"><h2 style="font-size:1.5rem">영역별 결과</h2>${ar.map(([a,c,n])=>`<div class="bar ${c<n?'low':''}"><span>${esc(a)}</span><span class="tr"><span class="fl" style="width:${c/n*100}%"></span></span><span>${c}/${n}</span></div>`).join('')}</section>
+  <section class="card flat" aria-label="다시 볼 문제"><h2 style="font-size:1.5rem">다시 볼 문제 <span class="lab" style="letter-spacing:0">총 ${wrong.length}문항</span></h2>
+  ${wrong.length?wrong.map(i=>`<details class="wq"><summary><span class="qn">${i+1}</span><span style="flex:1"><span style="display:block">${esc(qs[i].q)}</span><span class="lab" style="letter-spacing:0">${esc(qs[i].a)} · 난이도 ${esc(qs[i].lv)}</span></span><span class="pill">해설 보기</span></summary><div class="bd"><b>정답 ${circ(qs[i].ans)}</b> ${esc(qs[i].o[qs[i].ans])}<br>${esc(qs[i].e)}</div></details>`).join(''):'<p style="margin:.8rem 0 0">모두 맞혔어요! 수고했어요.</p>'}</section></div></div>
+  <div class="row sp mt"><button class="btn" data-a="concept">개념 정리로 돌아가기</button><div class="row"><button class="btn" data-a="start">처음부터 다시 풀기</button>${wrong.length?`<button class="btn pri" data-a="retry">틀린 문제 다시 풀기 · ${wrong.length}문항</button>`:''}</div></div>`;
+}
+/* ===== 교사용 ===== */
+function vTeacher(){
+  const pw=store.get('tpw',null);
+  if(!S.tOK){
+    return `<form class="card" id="tF" style="max-width:480px;margin:2rem auto" novalidate><h2 style="font-size:1.8rem">교사용 화면</h2><p style="font-size:.95rem;color:var(--sub);margin:.3rem 0 0">${pw?'비밀번호를 입력하세요.':'처음 사용합니다. 사용할 비밀번호를 정해 주세요.'}</p>
+    <label for="tp">비밀번호</label><input id="tp" type="password" autocomplete="off"><p class="err" id="err" role="alert"></p>
+    <div class="row"><button class="btn pri" type="submit">${pw?'들어가기':'비밀번호 정하고 들어가기'}</button><button class="btn" type="button" data-a="home">돌아가기</button></div>
+    <p style="font-size:.85rem;color:var(--sub);margin:1rem 0 0">※ 이 비밀번호는 이 브라우저 안에서만 확인하는 간단한 잠금이라 보안 장치는 아닙니다.</p></form>`;
+  }
+  const tabs=`<div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="${S.tTab==='rec'}" data-a="ttab" data-n="rec">응시 기록</button><button class="tab" role="tab" aria-selected="${S.tTab==='q'}" data-a="ttab" data-n="q">문제 편집</button><button class="tab" data-a="tout" style="margin-left:auto">나가기</button></div>`;
+  return `<h2 style="font-size:2rem;margin-bottom:.8rem">교사용 화면</h2>${tabs}${S.tmsg?`<p class="err" role="status" style="color:var(--ok)">${esc(S.tmsg)}</p>`:''}${S.tTab==='rec'?tRec():tQ()}`;
+}
+function recRows(f){
+  const rs=records().slice().reverse().filter(r=>!f||(r.sid+' '+r.name).includes(f));
+  return rs.length?rs.map(r=>`<tr><td>${stamp(r.t)}</td><td>${esc(r.sid)}</td><td>${esc(r.name)}</td><td>${r.score}/${r.total}</td><td>${minsec(r.sec)}</td><td>${r.hints}회</td><td>${r.wrong.length?r.wrong.join(', ')+'번':'-'}</td></tr>`).join(''):'<tr><td colspan="7">기록이 없습니다.</td></tr>';
+}
+function tRec(){
+  const rs=records();
+  return `<section class="card" aria-label="응시 기록"><div class="row sp"><div><h3 style="font-size:1.4rem">응시 기록 <span class="lab" style="letter-spacing:0">총 ${rs.length}건</span></h3><p style="margin:.2rem 0 0;font-size:.9rem;color:var(--sub)">이 기기의 브라우저에 저장된 기록만 보여요. 여러 기기의 기록은 각 기기에서 CSV로 내려받아 합치세요.</p></div>
+  <div class="row"><button class="btn sm" data-a="csv">CSV 내려받기</button><button class="btn sm" data-a="clear">기록 모두 지우기</button></div></div>
+  <label for="flt">학번·이름 검색</label><input id="flt" type="text" value="${esc(S.filter)}" style="max-width:260px"><div class="wrap mt"><table><thead><tr><th>일시</th><th>학번</th><th>이름</th><th>점수</th><th>시간</th><th>힌트</th><th>틀린 문제</th></tr></thead><tbody id="tb">${recRows(S.filter)}</tbody></table></div></section>`;
+}
+function tQ(){
+  const qs=getQs(),e=S.edit,d=e&&e.d;
+  const list=`<section class="card flat" style="padding:.6rem" aria-label="문제 목록"><ul class="qlist">${qs.map((q,i)=>`<li><button data-a="qsel" data-n="${i}" ${e&&e.i===i?'aria-current="true"':''}><b>${i+1}</b><span class="t">${esc(q.q)}</span><span class="lab" style="letter-spacing:0;color:inherit">${esc(q.lv)}</span></button></li>`).join('')}</ul><div class="row" style="padding:.6rem .2rem 0"><button class="btn sm" data-a="qadd">+ 새 문제</button></div></section>`;
+  const form=d?`<form class="card" id="qF" style="margin:0" novalidate><div class="row sp"><h3 style="font-size:1.4rem">문제 ${e.i+1} 편집</h3><div class="row"><button class="btn sm" type="button" data-a="qup" ${e.i===0?'disabled':''} aria-label="위로 이동">▲ 위로</button><button class="btn sm" type="button" data-a="qdown" ${e.i===qs.length-1?'disabled':''} aria-label="아래로 이동">▼ 아래로</button></div></div>
+  <div class="row" style="align-items:flex-end"><div style="flex:1;min-width:160px"><label for="fa">영역</label><select id="fa" data-f="a">${AREAS.map(a=>`<option ${d.a===a?'selected':''}>${a}</option>`).join('')}</select></div><div style="width:120px"><label for="fl">난이도</label><select id="fl" data-f="lv">${['하','중','상'].map(a=>`<option ${d.lv===a?'selected':''}>${a}</option>`).join('')}</select></div></div>
+  <label for="fq">문제</label><textarea id="fq" rows="3" data-f="q">${esc(d.q)}</textarea>
+  <fieldset style="border:0;padding:0;margin:1rem 0 0"><legend style="font-size:.95rem;color:#3E332B">선택지 (정답 번호를 선택)</legend>${d.o.map((o,i)=>`<div class="ans" style="margin-top:6px"><input type="radio" name="an" value="${i}" ${d.ans===i?'checked':''} aria-label="${i+1}번을 정답으로"><span>${i+1}</span><input type="text" data-o="${i}" value="${esc(o)}" aria-label="${i+1}번 선택지"></div>`).join('')}</fieldset>
+  <label for="fh">힌트</label><input id="fh" type="text" data-f="h" value="${esc(d.h)}"><label for="fe">해설</label><textarea id="fe" rows="3" data-f="e">${esc(d.e)}</textarea>
+  <p class="err" id="err" role="alert"></p><div class="row"><button class="btn pri" type="submit">저장</button><button class="btn" type="button" data-a="qdel">이 문제 삭제</button></div></form>`
+  :`<section class="card" style="margin:0"><p style="margin:0">왼쪽에서 문제를 고르면 수정할 수 있어요.</p></section>`;
+  return `<div class="tgrid">${list}<div style="display:grid;gap:14px">${form}<section class="card flat"><h3 style="font-size:1.2rem">문제 가져오기 · 내보내기</h3><p style="font-size:.9rem;color:var(--sub);margin:.3rem 0 .6rem">수정한 문제는 이 기기에만 저장돼요. 모든 학생에게 반영하려면 JSON을 내려받아 코드의 <code>DQ</code> 배열에 붙여 넣으세요.</p><div class="row"><button class="btn sm" data-a="qexp">문제 JSON 내보내기</button><label class="btn sm" style="margin:0;cursor:pointer">JSON 가져오기<input type="file" id="qimp" accept=".json,application/json" class="sr"></label><button class="btn sm" data-a="qreset">기본 문제로 되돌리기</button></div></section></div></div>`;
+}
+
+function render(opt){
+  opt=opt||{};
+  if(S.view!=='quiz'&&S.tid){clearInterval(S.tid);S.tid=null}
+  const f={home:vHome,concept:vConcept,quiz:vQuiz,result:vResult,teacher:vTeacher}[S.view];
+  header();$('#screen').className=opt.top?'enter':'';$('#screen').innerHTML=f();
+  document.documentElement.style.fontSize=S.fs+'px';
+  if(opt.top){window.scrollTo(0,0);$('#screen').focus({preventScroll:true})}
+  if(opt.focus){const el=$(opt.focus);if(el)el.focus({preventScroll:true})}
+}
+function go(v,top){S.view=v;S.tmsg='';render({top:top!==false})}
+
+/* ===== 퀴즈 로직 ===== */
+const elapsed=()=>S.quiz?Math.floor(((S.quiz.end||Date.now())-S.quiz.t0)/1000):0;
+function startQuiz(list,mode){
+  S.quiz={list,mode,i:0,res:[],picked:null,hint:false,hints:0,t0:Date.now(),end:null};
+  if(S.tid)clearInterval(S.tid);
+  S.tid=setInterval(()=>{const t=$('#tm');if(t&&S.quiz)t.textContent=clock(elapsed())},1000);
+  go('quiz');
+}
+function finish(){
+  const Q=S.quiz;Q.end=Date.now();clearInterval(S.tid);S.tid=null;
+  const score=Q.res.filter(r=>r.ok).length,sec=elapsed();
+  S.last={list:Q.list,res:Q.res,score,total:Q.list.length,sec,hints:Q.hints,mode:Q.mode};
+  if(Q.mode==='full'&&S.student){
+    const rs=records();rs.push({t:Date.now(),sid:S.student.sid,name:S.student.name,score,total:Q.list.length,sec,hints:Q.hints,wrong:Q.res.map((r,i)=>r.ok?null:i+1).filter(Boolean)});
+    if(!store.set('records',rs.slice(-1000)))S.last.saveFail=true;
+  }
+  go('result');
+}
+function act(a,b){
+  const n=b&&b.dataset?+b.dataset.n:0;
+  switch(a){
+    case'home':go('home');break;
+    case'concept':S.tab=0;S.line=1;go('concept');break;
+    case'tab':S.tab=n;S.line=1;render();break;
+    case'tabgo':if(n>=0&&n<TABS.length){S.tab=n;S.line=1;render({top:true})}break;
+    case'line':S.line=n;render({focus:`.ln[data-n="${n}"]`});break;
+    case'start':startQuiz(getQs().map((q,i)=>Object.assign({id:i+1},q)),'full');break;
+    case'pick':{const Q=S.quiz;if(Q.picked!==null)break;const q=Q.list[Q.i];Q.picked=n;Q.res[Q.i]={ok:n===q.ans,pick:n};render({focus:'#nx'});break}
+    case'hint':{const Q=S.quiz;if(Q.hint||Q.picked!==null)break;Q.hint=true;Q.hints++;render({focus:'.opts .op'});break}
+    case'next':{const Q=S.quiz;if(Q.picked===null)break;if(Q.i>=Q.list.length-1){finish();break}Q.i++;Q.picked=null;Q.hint=false;render({top:true});break}
+    case'retry':{const w=S.last.list.filter((q,i)=>!S.last.res[i].ok);if(w.length)startQuiz(w,'retry');break}
+    case'fs+':case'fs-':S.fs=Math.min(22,Math.max(14,S.fs+(a==='fs+'?2:-2)));store.set('fs',S.fs);render();break;
+    case'logout':S.student=null;store.del('student');render();break;
+    case'teacher':S.view='teacher';S.tOK=false;render({top:true});break;
+    case'tout':S.tOK=false;S.edit=null;go('home');break;
+    case'ttab':S.tTab=b.dataset.n;S.edit=null;S.tmsg='';render();break;
+    case'csv':{
+      const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+      const rows=[['일시','학번','이름','점수','문항수','소요시간(초)','힌트 사용','틀린 문제 번호']].concat(records().map(r=>[stamp(r.t),r.sid,r.name,r.score,r.total,r.sec,r.hints,r.wrong.join(' ')]));
+      download('정과정_응시기록.csv','\ufeff'+rows.map(r=>r.map(q).join(',')).join('\r\n'),'text/csv;charset=utf-8');break}
+    case'clear':if(confirm('이 기기에 저장된 응시 기록을 모두 지울까요? 되돌릴 수 없습니다.')){store.set('records',[]);S.tmsg='기록을 모두 지웠습니다.';render()}break;
+    case'qsel':S.edit={i:n,d:JSON.parse(JSON.stringify(getQs()[n]))};S.tmsg='';render();break;
+    case'qadd':{const qs=getQs().slice();qs.push({a:AREAS[0],lv:'중',q:'새 문제를 입력하세요.',o:['선택지 1','선택지 2','선택지 3','선택지 4','선택지 5'],ans:0,h:'',e:''});store.set('questions',qs);S.edit={i:qs.length-1,d:JSON.parse(JSON.stringify(qs[qs.length-1]))};S.tmsg='새 문제를 추가했습니다. 내용을 고치고 저장하세요.';render();break}
+    case'qdel':if(S.edit&&confirm('이 문제를 삭제할까요?')){const qs=getQs().slice();if(qs.length<=1){alert('문제는 최소 1개가 필요합니다.');break}qs.splice(S.edit.i,1);store.set('questions',qs);S.edit=null;S.tmsg='삭제했습니다.';render()}break;
+    case'qup':case'qdown':{if(!S.edit)break;const qs=getQs().slice(),i=S.edit.i,j=a==='qup'?i-1:i+1;if(j<0||j>=qs.length)break;[qs[i],qs[j]]=[qs[j],qs[i]];store.set('questions',qs);S.edit.i=j;S.tmsg='순서를 바꿨습니다.';render();break}
+    case'qexp':download('questions.json',JSON.stringify(getQs(),null,2),'application/json');break;
+    case'qreset':if(confirm('수정한 문제를 모두 버리고 기본 15문항으로 되돌릴까요?')){store.del('questions');S.edit=null;S.tmsg='기본 문제로 되돌렸습니다.';render()}break;
+  }
+}
+function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+
+/* ===== 이벤트 ===== */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.tagName==='A')e.preventDefault();act(b.dataset.a,b)});
+document.addEventListener('submit',e=>{
+  e.preventDefault();const id=e.target.id;
+  if(id==='loginF'){
+    const sid=$('#sid').value.trim(),nm=$('#nm').value.trim();
+    if(!/^\d{1,8}$/.test(sid)){$('#err').textContent='학번은 숫자로 입력해 주세요.';$('#sid').focus();return}
+    if(!nm){$('#err').textContent='이름을 입력해 주세요.';$('#nm').focus();return}
+    S.student={sid,name:nm};store.set('student',S.student);render({top:true});
+  }
+  if(id==='tF'){
+    const v=$('#tp').value,pw=store.get('tpw',null);
+    if(pw===null){if(v.length<4){$('#err').textContent='비밀번호는 4자 이상으로 정해 주세요.';return}store.set('tpw',v);S.tOK=true;render({top:true})}
+    else if(v===pw){S.tOK=true;render({top:true})}else{$('#err').textContent='비밀번호가 맞지 않습니다.';$('#tp').select()}
+  }
+  if(id==='qF'){
+    const d=S.edit.d;
+    if(!d.q.trim()||d.o.some(o=>!o.trim())){$('#err').textContent='문제와 선택지 5개를 모두 입력해 주세요.';return}
+    const qs=getQs().slice();qs[S.edit.i]=JSON.parse(JSON.stringify(d));store.set('questions',qs);S.tmsg='저장했습니다.';render();
+  }
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='flt'){S.filter=t.value.trim();$('#tb').innerHTML=recRows(S.filter);return}
+  if(S.edit&&t.closest('#qF')){
+    if(t.dataset.f)S.edit.d[t.dataset.f]=t.value;
+    if(t.dataset.o!==undefined)S.edit.d.o[+t.dataset.o]=t.value;
+  }
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.name==='an'&&S.edit)S.edit.d.ans=+t.value;
+  if(t.id==='qimp'&&t.files[0]){
+    const r=new FileReader();r.onload=()=>{try{const a=JSON.parse(r.result);
+      if(!Array.isArray(a)||!a.length||a.some(q=>!q||typeof q.q!=='string'||!Array.isArray(q.o)||q.o.length!==5||!(q.ans>=0&&q.ans<5)))throw 0;
+      store.set('questions',a.map(q=>({a:String(q.a||AREAS[0]),lv:String(q.lv||'중'),q:q.q,o:q.o.map(String),ans:q.ans|0,h:String(q.h||''),e:String(q.e||'')})));S.edit=null;S.tmsg='문제 '+a.length+'개를 가져왔습니다.';render()}
+      catch(x){S.tmsg='';alert('문제 형식이 올바르지 않습니다. (선택지 5개, 정답 0~4 필요)')}};
+    r.readAsText(t.files[0]);
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(S.view!=='quiz'||!S.quiz||S.quiz.picked!==null)return;
+  const tg=e.target.tagName;if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT')return;
+  if(/^[1-5]$/.test(e.key)){e.preventDefault();act('pick',{dataset:{n:+e.key-1}})}
+});
+window.addEventListener('beforeunload',e=>{if(S.view==='quiz'&&S.quiz&&!S.quiz.end&&S.quiz.res.length){e.preventDefault();e.returnValue=''}});
+render({top:false});
+})();
+</script>
+</body>
+</html>
